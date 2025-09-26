@@ -4,6 +4,8 @@ github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/devicehub-go/unicomm v0.0.0-20250924114543-225194957b1f h1:jN6sgwOBXx4RkgrlWqU2EAHSBHHQniHP9LdM5MCd6WM=
 github.com/devicehub-go/unicomm v0.0.0-20250924114543-225194957b1f/go.mod h1:aU5J9B9AuNzA8G3yeAw9RLVG4m0XSTrfHzHYvjnGa9w=
+github.com/devicehub-go/unicomm v0.0.0-20250926191724-f3acc0aeb0c3 h1:mqn42p/kY4+uziRXyTKE1sQ9K2Jk1Ra3kL/mVHKHg4E=
+github.com/devicehub-go/unicomm v0.0.0-20250926191724-f3acc0aeb0c3/go.mod h1:aU5J9B9AuNzA8G3yeAw9RLVG4m0XSTrfHzHYvjnGa9w=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 github.com/stretchr/testify v1.8.4 h1:CcVxjf3Q8PM0mHUKJCdn+eZZtm5yQwehR5yeSVQQcUk=

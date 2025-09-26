@@ -1,4 +1,4 @@
-package main
+package thorlabskdc101
 
 import (
 	"github.com/devicehub-go/thorlabs-kdc101/protocol"

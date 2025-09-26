@@ -56,14 +56,18 @@ func main() {
     // Create controller instance
     controller := kdc101.New(
         kdc101.MTS25Z8,    // Stage type
-        kdc101.Brushed,    // Motor ty
-            Port: "/dev/ttyUSB0",  // Adjust for your system
-	        BaudRate: 115200,
-			DataBits: 8,
-			StopBits: 1,
-			Parity: "N",
-            ReadTimeout:  time.Second * 5,
-            WriteTimeout: time.Second * 5,
+        kdc101.Brushed,    // Motor type
+        unicomm.UnicommOptions{
+			Protocol: unicomm.Serial,
+			Serial: unicommserial.SerialOptions{
+				PortName:     "COM6", // Replace with your options
+				BaudRate:     115200,
+				DataBits:     8,
+				StopBits:     unicommserial.OneStopBit,
+				Parity:       unicommserial.NoParity,
+				ReadTimeout:  time.Second * 5,
+				WriteTimeout: time.Second * 5,
+			},
         },
     )
     
