@@ -1,3 +1,9 @@
+/*
+Author: Leonardo Rossi Leao
+Created at: September 26th, 2025
+Last update: September 26th, 2025
+*/
+
 package thorlabskdc101
 
 import (
