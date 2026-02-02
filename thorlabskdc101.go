@@ -33,11 +33,11 @@ const (
 Creates a new instance of Brushed Motor Controller KDC101 that
 allows to communicate and control the connected motors
 */
-func New(stage StageType, motor MotorType, options unicomm.UnicommOptions) *KDC101 {
+func New(stage StageType, motor MotorType, options unicomm.Options) *KDC101 {
 	oem750 := &KDC101{
 		Communication: unicomm.New(options),
-		StageType: string(stage),
-		MotorType: string(motor),
+		StageType:     string(stage),
+		MotorType:     string(motor),
 	}
 	return oem750
 }
