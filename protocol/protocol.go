@@ -33,8 +33,8 @@ type DataMessage struct {
 
 type KDC101 struct {
 	Communication unicomm.Unicomm
-	StageType string // e.g., "MTS25-Z8", "MTS50-Z8", etc.
-	MotorType string // e.g., "Brushed", "Brushless"
+	StageType     string // e.g., "MTS25-Z8", "MTS50-Z8", etc.
+	MotorType     string // e.g., "Brushed", "Brushless"
 }
 
 const (
@@ -46,7 +46,7 @@ const (
 var ErrChannelNotSupported = fmt.Errorf("KDC101 just supports channel 1")
 var ErrInvalidResponseLength = fmt.Errorf("invalid response length")
 var InvalidHeader HeaderMessage = HeaderMessage{}
-var InvalidData   DataMessage = DataMessage{}
+var InvalidData DataMessage = DataMessage{}
 
 /*
 Establishes a connection with the device
@@ -147,7 +147,7 @@ func (k *KDC101) ReadData() (DataMessage, error) {
 }
 
 /*
-Sends a header only message to device and waits for a 
+Sends a header only message to device and waits for a
 header only response.
 */
 func (k *KDC101) RequestHeaderOnly(msg HeaderMessage) (HeaderMessage, error) {

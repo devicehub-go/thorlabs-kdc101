@@ -28,7 +28,7 @@ type DCStatusBits struct {
 	JoggingCW        bool
 	JoggingCCW       bool
 	IsConnected      bool
-	IsHoming 	     bool
+	IsHoming         bool
 	IsHomed          bool
 	IsInitializing   bool
 	IsTracking       bool
@@ -91,10 +91,10 @@ and stage type
 */
 func (k *KDC101) DCStatusUpdateToSI(update DCStatusUpdate) DCStatusUpdateSI {
 	return DCStatusUpdateSI{
-		Channel:  update.Channel,
-		Position: k.CountsToPosition(update.Position),
-		Velocity: k.CountsToVelocity(uint32(update.Velocity)),
-		Current:  float64(update.Current),
+		Channel:    update.Channel,
+		Position:   k.CountsToPosition(update.Position),
+		Velocity:   k.CountsToVelocity(uint32(update.Velocity)),
+		Current:    float64(update.Current),
 		StatusBits: k.ParseDCStatusBits(update.StatusBits),
 	}
 }

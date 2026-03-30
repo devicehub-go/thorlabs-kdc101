@@ -11,9 +11,9 @@ import (
 )
 
 type VelocityProfile struct {
-	MinVelocity float64
-	MaxVelocity float64
-	Acceleration float64
+	MinVelocity  float64 // mm/s
+	MaxVelocity  float64 // mm/s
+	Acceleration float64 // mm/s²
 }
 
 type JogParameters struct {
@@ -67,13 +67,14 @@ func (k *KDC101) IsEnabled(channel uint8) (bool, error) {
 
 /*
 Sets trapezoidal velocity parameters for the specified
-motor channel.
+motor channel. Minimum velocity is ignored because KDC101
+just accepts 0
 */
 func (k *KDC101) SetTrapezoidalVelocity(channel uint8, profile VelocityProfile) error {
 	if channel != 1 {
 		return ErrChannelNotSupported
 	}
-	minVel := k.VelocityToCounts(profile.MinVelocity)
+	minVel := k.VelocityToCounts(0)
 	accel := k.AccelerationToCounts(profile.Acceleration)
 	maxVel := k.VelocityToCounts(profile.MaxVelocity)
 
@@ -122,9 +123,9 @@ func (k *KDC101) GetTrapezoidalVelocity(channel uint8) (VelocityProfile, error) 
 	maxVel := k.CountsToVelocity(utils.BytesToDword(data[10:14]))
 
 	return VelocityProfile{
-		MinVelocity: minVel,
+		MinVelocity:  minVel,
 		Acceleration: accel,
-		MaxVelocity: maxVel,
+		MaxVelocity:  maxVel,
 	}, nil
 }
 

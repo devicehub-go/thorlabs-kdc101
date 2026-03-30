@@ -24,7 +24,7 @@ func TestMoveMotor(t *testing.T) {
 		unicomm.Options{
 			Protocol: unicomm.Serial,
 			Serial: unicommserial.SerialOptions{
-				PortName:     "COM6",
+				PortName:     "COM5",
 				BaudRate:     115200,
 				DataBits:     8,
 				StopBits:     unicommserial.OneStopBit,
@@ -44,26 +44,16 @@ func TestMoveMotor(t *testing.T) {
 		log.Fatal("Failed to enable motor: ", err)
 	}
 
-	fmt.Println("Homing stage...")
-	if err := controller.StartHomeMove(1); err != nil {
-		log.Fatal("Failed to start homing: ", err)
+	status, err := controller.GetDCStatusUpdate(1)
+	if err != nil {
+		log.Fatal("Failed to get status:", err)
 	}
+	statusSI := controller.DCStatusUpdateToSI(status)
+	fmt.Println(statusSI)
 
-	for {
-		status, err := controller.GetDCStatusUpdate(1)
-		if err != nil {
-			log.Fatal("Failed to get status:", err)
-		}
-		statusSI := controller.DCStatusUpdateToSI(status)
-		if statusSI.StatusBits.IsHomed {
-			fmt.Println("Homing complete!")
-			break
-		}
-		time.Sleep(100 * time.Millisecond)
+	velocity, err := controller.GetTrapezoidalVelocity(1)
+	if err != nil {
+		log.Fatal("Failed to get velocity:", err)
 	}
-
-	fmt.Println("Moving to 10mm...")
-	if err := controller.MoveAbsolutePosition(1, 10.0); err != nil {
-		log.Fatal("Failed to move:", err)
-	}
+	fmt.Println(velocity)
 }

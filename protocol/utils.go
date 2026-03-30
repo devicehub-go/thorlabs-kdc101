@@ -6,6 +6,8 @@ Last update: September 26th, 2025
 
 package protocol
 
+import "math"
+
 var MotorTFactor = map[string]float64{
 	"Brushed":   2048.0 / (6.0 * 1e6),
 	"Brushless": 2048.0 / (6.0 * 1e6),
@@ -27,7 +29,7 @@ Converts position in millimeters to encoder counts
 */
 func (k *KDC101) PositionToCounts(position float64) int32 {
 	encCount := StageScalingFactor[k.StageType]
-	return int32(position * encCount)
+	return int32(math.Round(position * encCount))
 }
 
 /*
@@ -45,7 +47,7 @@ counts per second
 func (k *KDC101) VelocityToCounts(velocity float64) uint32 {
 	encCount := StageScalingFactor[k.StageType]
 	T := MotorTFactor[k.MotorType]
-	return uint32(velocity * T * 65536 * encCount)
+	return uint32(math.Round(velocity * T * 65536 * encCount))
 }
 
 /*
@@ -64,7 +66,7 @@ encoder counts per second squared
 func (k *KDC101) AccelerationToCounts(acceleration float64) uint32 {
 	encCount := StageScalingFactor[k.StageType]
 	T := MotorTFactor[k.MotorType]
-	return uint32(acceleration * (T * T) * 65536 * encCount)
+	return uint32(math.Round(acceleration * (T * T) * 65536 * encCount))
 }
 
 /*
