@@ -43,7 +43,7 @@ func (k *KDC101) Enable(channel uint8, enable bool) error {
 	} else {
 		msg.Parameter2 = 0x02
 	}
-	return k.WriteHeaderOnly(msg)
+	return k.writeHeaderOnly(msg)
 }
 
 /*
@@ -86,7 +86,7 @@ func (k *KDC101) SetTrapezoidalVelocity(channel uint8, profile VelocityProfile) 
 	data = append(data, utils.DwordToBytes(accel)...)
 	data = append(data, utils.DwordToBytes(maxVel)...)
 
-	return k.WriteData(DataMessage{
+	return k.writeData(DataMessage{
 		ID:          0x0413,
 		Data:        data,
 		DataLength:  uint16(len(data)),
@@ -152,7 +152,7 @@ func (k *KDC101) SetJogParameters(channel uint8, params JogParameters) error {
 	data = append(data, utils.DwordToBytes(maxVel)...)
 	data = append(data, utils.WordToBytes(params.StopMode)...)
 
-	return k.WriteData(DataMessage{
+	return k.writeData(DataMessage{
 		ID:          0x0416,
 		Data:        data,
 		DataLength:  uint16(len(data)),
@@ -214,7 +214,7 @@ func (k *KDC101) SetRelativeMoveDistance(channel uint8, distance float64) error 
 		0x00,
 	}
 	data = append(data, utils.LongToBytes(counts)...)
-	return k.WriteData(DataMessage{
+	return k.writeData(DataMessage{
 		ID:          0x0445,
 		Data:        data,
 		DataLength:  uint16(len(data)),
@@ -262,7 +262,7 @@ func (k *KDC101) SetAbsoluteMoveDistance(channel uint8, position float64) error 
 		0x00,
 	}
 	data = append(data, utils.LongToBytes(counts)...)
-	return k.WriteData(DataMessage{
+	return k.writeData(DataMessage{
 		ID:          0x0450,
 		Data:        data,
 		DataLength:  uint16(len(data)),

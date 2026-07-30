@@ -13,7 +13,7 @@ import (
 )
 
 type Direction uint8
-type StopMode  uint8
+type StopMode uint8
 
 type HwInformation struct {
 	SerialNumber    int32
@@ -41,7 +41,7 @@ func (k *KDC101) Identify(channel uint8) error {
 	if channel != 1 {
 		return ErrChannelNotSupported
 	}
-	return k.WriteHeaderOnly(HeaderMessage{
+	return k.writeHeaderOnly(HeaderMessage{
 		ID:          0x0223,
 		Parameter1:  byte(1 << (channel - 1)),
 		Parameter2:  0x00,
@@ -87,7 +87,7 @@ func (k *KDC101) StartHomeMove(channel uint8) error {
 	if channel != 1 {
 		return ErrChannelNotSupported
 	}
-	return k.WriteHeaderOnly(HeaderMessage{
+	return k.writeHeaderOnly(HeaderMessage{
 		ID:          0x0443,
 		Parameter1:  byte(1 << (channel - 1)),
 		Destination: GenericUnit,
@@ -103,7 +103,7 @@ func (k *KDC101) StartRelativeMove(channel uint8) error {
 	if channel != 1 {
 		return ErrChannelNotSupported
 	}
-	return k.WriteHeaderOnly(HeaderMessage{
+	return k.writeHeaderOnly(HeaderMessage{
 		ID:          0x0448,
 		Parameter1:  byte(1 << (channel - 1)),
 		Destination: GenericUnit,
@@ -125,7 +125,7 @@ func (k *KDC101) MoveRelativeDistance(channel uint8, distance float64) error {
 		0x00,
 	}
 	data = append(data, utils.LongToBytes(counts)...)
-	return k.WriteData(DataMessage{
+	return k.writeData(DataMessage{
 		ID:          0x0448,
 		Data:        data,
 		DataLength:  uint16(len(data)),
@@ -142,7 +142,7 @@ func (k *KDC101) StartAbsoluteMove(channel uint8) error {
 	if channel != 1 {
 		return ErrChannelNotSupported
 	}
-	return k.WriteHeaderOnly(HeaderMessage{
+	return k.writeHeaderOnly(HeaderMessage{
 		ID:          0x0453,
 		Parameter1:  byte(1 << (channel - 1)),
 		Destination: GenericUnit,
@@ -164,7 +164,7 @@ func (k *KDC101) MoveAbsolutePosition(channel uint8, position float64) error {
 		0x00,
 	}
 	data = append(data, utils.LongToBytes(counts)...)
-	return k.WriteData(DataMessage{
+	return k.writeData(DataMessage{
 		ID:          0x0453,
 		Data:        data,
 		DataLength:  uint16(len(data)),
@@ -180,7 +180,7 @@ func (k *KDC101) StartJogMove(channel uint8, direction Direction) error {
 	if channel != 1 {
 		return ErrChannelNotSupported
 	}
-	return k.WriteHeaderOnly(HeaderMessage{
+	return k.writeHeaderOnly(HeaderMessage{
 		ID:          0x046A,
 		Parameter1:  byte(1 << (channel - 1)),
 		Parameter2:  byte(direction),
@@ -198,7 +198,7 @@ func (k *KDC101) MoveContinuous(channel uint8, direction Direction) error {
 	if channel != 1 {
 		return ErrChannelNotSupported
 	}
-	return k.WriteHeaderOnly(HeaderMessage{
+	return k.writeHeaderOnly(HeaderMessage{
 		ID:          0x0457,
 		Parameter1:  byte(1 << (channel - 1)),
 		Parameter2:  byte(direction),
@@ -214,7 +214,7 @@ func (k *KDC101) Stop(channel uint8, mode StopMode) error {
 	if channel != 1 {
 		return ErrChannelNotSupported
 	}
-	return k.WriteHeaderOnly(HeaderMessage{
+	return k.writeHeaderOnly(HeaderMessage{
 		ID:          0x0465,
 		Parameter1:  byte(1 << (channel - 1)),
 		Parameter2:  byte(mode),

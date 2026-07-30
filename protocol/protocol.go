@@ -8,6 +8,7 @@ package protocol
 
 import (
 	"fmt"
+	"sync"
 	"time"
 
 	"github.com/devicehub-go/unicomm"
@@ -35,6 +36,7 @@ type KDC101 struct {
 	Communication unicomm.Unicomm
 	StageType     string // e.g., "MTS25-Z8", "MTS50-Z8", etc.
 	MotorType     string // e.g., "Brushed", "Brushless"
+	mutex         sync.Mutex
 }
 
 const (
@@ -52,6 +54,9 @@ var InvalidData DataMessage = DataMessage{}
 Establishes a connection with the device
 */
 func (k *KDC101) Connect() error {
+	k.mutex.Lock()
+	defer k.mutex.Unlock()
+
 	if err := k.Communication.Connect(); err != nil {
 		return err
 	}
@@ -62,6 +67,9 @@ func (k *KDC101) Connect() error {
 Closes the connection with the device
 */
 func (k *KDC101) Disconnect() error {
+	k.mutex.Lock()
+	defer k.mutex.Unlock()
+
 	return k.Communication.Disconnect()
 }
 
@@ -69,13 +77,16 @@ func (k *KDC101) Disconnect() error {
 Returns true if device is connected
 */
 func (k *KDC101) IsConnected() bool {
+	k.mutex.Lock()
+	defer k.mutex.Unlock()
+
 	return k.Communication.IsConnected()
 }
 
 /*
 Writes a header only message
 */
-func (k *KDC101) WriteHeaderOnly(msg HeaderMessage) error {
+func (k *KDC101) writeHeaderOnly(msg HeaderMessage) error {
 	bytes := []byte{
 		byte(msg.ID & 0x00FF),
 		byte(msg.ID >> 8),
@@ -90,7 +101,7 @@ func (k *KDC101) WriteHeaderOnly(msg HeaderMessage) error {
 /*
 Writes a data message
 */
-func (k *KDC101) WriteData(msg DataMessage) error {
+func (k *KDC101) writeData(msg DataMessage) error {
 	bytes := []byte{
 		byte(msg.ID & 0x00FF),
 		byte(msg.ID >> 8),
@@ -106,7 +117,7 @@ func (k *KDC101) WriteData(msg DataMessage) error {
 /*
 Reads a header only response
 */
-func (k *KDC101) ReadHeaderOnly() (HeaderMessage, error) {
+func (k *KDC101) readHeaderOnly() (HeaderMessage, error) {
 	response, err := k.Communication.Read(6)
 	if err != nil {
 		return InvalidHeader, err
@@ -124,7 +135,7 @@ func (k *KDC101) ReadHeaderOnly() (HeaderMessage, error) {
 /*
 Reads a message which contains header and data
 */
-func (k *KDC101) ReadData() (DataMessage, error) {
+func (k *KDC101) readData() (DataMessage, error) {
 	response, err := k.Communication.Read(6)
 	if err != nil {
 		return InvalidData, err
@@ -151,12 +162,15 @@ Sends a header only message to device and waits for a
 header only response.
 */
 func (k *KDC101) RequestHeaderOnly(msg HeaderMessage) (HeaderMessage, error) {
-	err := k.WriteHeaderOnly(msg)
+	k.mutex.Lock()
+	defer k.mutex.Unlock()
+
+	err := k.writeHeaderOnly(msg)
 	if err != nil {
 		return InvalidHeader, err
 	}
 	time.Sleep(15 * time.Millisecond)
-	return k.ReadHeaderOnly()
+	return k.readHeaderOnly()
 }
 
 /*
@@ -164,10 +178,13 @@ Sends a header only message to device and waits for a
 data message response.
 */
 func (k *KDC101) RequestData(msg HeaderMessage) (DataMessage, error) {
-	err := k.WriteHeaderOnly(msg)
+	k.mutex.Lock()
+	defer k.mutex.Unlock()
+
+	err := k.writeHeaderOnly(msg)
 	if err != nil {
 		return InvalidData, err
 	}
 	time.Sleep(50 * time.Millisecond)
-	return k.ReadData()
+	return k.readData()
 }
